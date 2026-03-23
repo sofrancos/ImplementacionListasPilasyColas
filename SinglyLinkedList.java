@@ -1,6 +1,7 @@
 public class SinglyLinkedList {
-    private Node head;
-    private int size;
+
+private Node head;
+private int size;
 
     public SinglyLinkedList() {
         head = null;
@@ -20,8 +21,20 @@ public class SinglyLinkedList {
 
     public void pushBack(int data) {
 
-    }
+        Node nuevo = new Node (data);
+        if (isEmpty ()){
+            head = nuevo;
+        }else{
+            Node current = head;
 
+            while(current.next != null){
+                current = current.next;
+            }
+            current.next = nuevo;
+        }
+        size++;
+    }
+    
     public int popFront() {
         if (isEmpty ()) return -1;
 
@@ -34,9 +47,16 @@ public class SinglyLinkedList {
     }
 
     public int popBack() {
+
         if(isEmpty())return -1;
-        
-        Nodo current = head;
+
+        if (head.next == null) { 
+            int data = head.data;
+            head = null;
+            size--;
+            return data;
+         }
+        Node current = head;
         
         while(current.next.next != null){
             current = current.next;
@@ -44,30 +64,82 @@ public class SinglyLinkedList {
         
         int data = current.next.data;
         
-        current.next = null
+        current.next = null;
         size--;
         return data; 
     }
 
-    public Node find(int data) { 
+    public Node find(int data) {
+
+        Node current = head;
+
+        while(current != null){
+            if(current.data == data){
+                return current;
+            }
+            current = current.next; 
+        }
         return null; 
     }
 
     public void erase(Node node) {
+        if(isEmpty()) return;
+        if(head == node) {
+            head = head.next;
+            size--;
+            return;
+        }
+        Node current = head;
+        while(current.next != null && current.next != node){
+            current = current.next;
+        }
+        if(current.next == null) return;
+        current.next = current.next.next;
+        size--;
     }
 
     public void addBefore(Node node, int data) {
 
+        if(isEmpty()) return;
+        Node nuevo = new Node(data);
+
+        if(head == node){
+            nuevo.next = head;
+            head = nuevo;
+            size++;
+            return;
+        }
+
+        Node current = head;
+        while(current.next != null && current.next != node){
+            current = current.next;
+        }
+
+        if(current.next == null) return;
+        nuevo.next = current.next;
+        current.next = nuevo;
+        size++;
     }
 
     public void addAfter(Node node, int data) {
+        if(isEmpty()) return;
+
+        Node nuevo = new Node(data);
+        Node current = head;
+
+        while(current != null && current != node){
+            current = current.next;
+        }
+
+        if(current == null) return;
+        nuevo.next = current.next;
+        current.next = nuevo;
+        size++;
     }
 
     public boolean isEmpty() { 
         return head == null; 
     }
-    public int topFront() { return head != null ? head.data : -1; }
-    public int topBack() { return -1; }
 
     public int size() {
         return size; 
