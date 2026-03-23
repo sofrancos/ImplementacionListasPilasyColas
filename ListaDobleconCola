@@ -1,0 +1,95 @@
+public class DoublyLinkedList<T> {
+
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+
+    // Clase interna para los nodos
+    private static class Node<T> {
+        T data;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(T data) {
+            this.data = data;
+            this.next = null;
+            this.prev = null;
+        }
+    }
+
+    // Constructor
+    public DoublyLinkedList() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+
+    // Inserta al inicio
+    public void pushFront(T value) {
+        // TODO: implementar
+    }
+
+    // Inserta al final
+    public void pushBack(T value) {
+        // TODO: implementar
+    }
+
+    // Elimina el primero
+    public void popFront() {
+        // TODO: implementar
+    }
+
+    // Elimina el último
+    public void popBack() {
+        // TODO: implementar
+    }
+
+    // Busca un elemento y retorna la referencia al nodo
+    public Node<T> find(T value) {
+        // TODO: implementar
+        return null;
+    }
+
+    // Elimina un elemento específico
+    public void erase(T value) {
+        // TODO: implementar
+    }
+
+    // Inserta antes de un elemento dado
+    public void addBefore(Node<T> node, T value) {
+        // TODO: implementar
+    }
+
+    // Inserta después de un elemento dado
+    public void addAfter(Node<T> node, T value) {
+        // TODO: implementar
+    }
+
+    // Verifica si está vacía
+    public boolean empty() {
+        // TODO: implementar
+        return false;
+    }
+
+    // Retorna el último elemento
+    public T topBack() {
+        // TODO: implementar
+        return null;
+    }
+
+    // Retorna el primer elemento
+    public T topFront() {
+        // TODO: implementar
+        return null;
+    }
+
+    // Tamaño de la lista
+    public int size() {
+        return size;
+    }
+
+    // Limpia la lista
+    public void clear() {
+        // TODO: implementar
+    }
+}
