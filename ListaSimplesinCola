@@ -1,0 +1,76 @@
+public class SinglyLinkedList<T> {
+
+    private Node<T> head;
+    private int size;
+
+    private static class Node<T> {
+        T data;
+        Node<T> next;
+
+        Node(T data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    public SinglyLinkedList() {
+        this.head = null;
+        this.size = 0;
+    }
+
+    public void pushFront(T value) {
+        // TODO
+    }
+
+    public void pushBack(T value) {
+        // TODO
+    }
+
+    public void popFront() {
+        // TODO
+    }
+
+    public void popBack() {
+        // TODO
+    }
+
+    public Node<T> find(T value) {
+        // TODO
+        return null;
+    }
+
+    public void erase(T value) {
+        // TODO
+    }
+
+    public void addBefore(Node<T> node, T value) {
+        // TODO
+    }
+
+    public void addAfter(Node<T> node, T value) {
+        // TODO
+    }
+
+    public boolean empty() {
+        // TODO
+        return false;
+    }
+
+    public T topFront() {
+        // TODO
+        return null;
+    }
+
+    public T topBack() {
+        // TODO
+        return null;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public void clear() {
+        // TODO
+    }
+}
