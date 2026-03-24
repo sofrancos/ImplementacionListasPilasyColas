@@ -16,27 +16,41 @@ public class MyQueue<T> {
         this.size = 0;
     }
 
-    // Inserta al final
+// Inserta al final
     public void enqueue(T x) {
-        // TODO
+        if (size == capacity) {
+            resize(capacity * 2);
+        }
+        data[rear] = x;
+        rear = (rear + 1) % capacity;
+        size++;
     }
-
+    
     // Elimina y retorna el primero
     public T dequeue() {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            System.out.println("Error: Cola vacía");
+            return null;
+        }
+        T value = data[front];
+        data[front] = null;
+        front = (front + 1) % capacity;
+        size--;
+        return value;
     }
 
     // Retorna el primero sin eliminar
     public T front() {
-        // TODO
-        return null;
+       if (isEmpty()) {
+            System.out.println("Error: Cola vacía");
+            return null;
+        }
+        return data[front];
     }
 
     // Verifica si está vacía
     public boolean isEmpty() {
-        // TODO
-        return false;
+        return size == 0;
     }
 
     // Retorna el tamaño
@@ -46,27 +60,43 @@ public class MyQueue<T> {
 
     // Elimina la primera ocurrencia de n
     public void delete(T n) {
-        // TODO
-    }
+        if (isEmpty()) return;
+        for (int i = 0; i < size; i++) {
+            int index = (front + i) % capacity;
+            if (data[index].equals(n)) {
 
+                for (int j = i; j < size - 1; j++) {
+                    int curr = (front + j) % capacity;
+                    int next = (front + j + 1) % capacity;
+                    data[curr] = data[next];
+                }
+                int last = (front + size - 1) % capacity;
+                data[last] = null;
+                rear = (rear - 1 + capacity) % capacity;
+                size--;
+                return;
+            }
+        }
+    }
     // Redimensiona el arreglo
     private void resize(int newCapacity) {
-        // TODO
+        T[] newData = (T[]) new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newData[i] = data[(front + i) % capacity];
+        }
+        data = newData;
+        front = 0;
+        rear = size;
+        capacity = newCapacity;
     }
 
     // Limpia la cola
     public void clear() {
-        // TODO
+       for (int i = 0; i < size; i++) {
+            data[(front + i) % capacity] = null;
+        }
+        front = 0;
+        rear = 0;
+        size = 0;
     }
 }
-
-
-//Estructura tipo buffer circular:
-//front → índice del primer elemento
-//rear → posición donde se inserta el siguiente
-//Operaciones clave:
-//enqueue: usa (rear + 1) % capacity
-//dequeue: usa (front + 1) % capacity
-//resize debe:
-//reordenar elementos desde front a rear
-//resetear front = 0 y rear = size
