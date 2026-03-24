@@ -1,18 +1,20 @@
 import java.time.Instant;
 import java.time.Duration;
-import java.util.Scanner;
-import java.util.Random;
 
 public class Main {
 
-    public static void exec(int size, String method, Operation operation) {
-        Instant start = Instant.now();        
-        
-        for (int i =0; i<size; i++)
+    @FunctionalInterface
+    interface Operation {
+        void apply(int data);
+    }
+
+    public static long exec(int size, Operation operation) {
+        Instant start = Instant.now();
+        for (int i = 0; i < size; i++) {
             operation.apply(i);
         }
         Instant finish = Instant.now();
-        return Duration.between(start, finish).toMillis();
+        return Duration.between(start, finish).toNanos();
     }
 
     public static void main(String[] args) {
@@ -20,7 +22,7 @@ public class Main {
         int[] sizes = {1000, 10000, 100000};
 
         System.out.println("====================================================");
-        System.out.printf("%-15s | %-12s | %-15s%n", "ESTRUCTURA", "ELEMENTOS", "TIEMPO (ms)");
+        System.out.printf("%-15s | %-12s | %-15s%n", "ESTRUCTURA", "ELEMENTOS", "TIEMPO (ns)");
         System.out.println("----------------------------------------------------");
 
         for (int size : sizes) {
