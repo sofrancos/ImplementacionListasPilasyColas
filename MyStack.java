@@ -21,23 +21,29 @@ public class MyStack<T> {
         size++;
     }
 
-    // Elimina el elemento del tope
-    public void pop() {
-        if (!empty()) {
-            size--;
+   // Elimina y retorna el elemento en la cima
+    public T pop() {
+        if (isEmpty()) {
+            System.out.println("Error: Stack vacío");
+            return null;
         }
+        T value = data[size - 1];
+        data[size - 1] = null;
+        size--;
+        return value;
     }
 
-    // Retorna el elemento del tope
-    public T top() {
-        if (!empty()) {
-            return data[size - 1];
+   // Retorna el elemento en la cima sin eliminarlo
+    public T peek() {
+        if (isEmpty()) {
+            System.out.println("Error: Stack vacío");
+            return null;
         }
-        return null;
+        return data[size - 1];
     }
 
     // Verifica si está vacío
-    public boolean empty() {
+    public boolean isEmpty() {
         return size == 0;
     }
 
@@ -51,6 +57,20 @@ public class MyStack<T> {
         return capacity;
     }
 
+    // Elimina el primer valor n que encuentra
+    public void delete(T n) {
+        for (int i = size - 1; i >= 0; i--) {
+            if (data[i].equals(n)) {
+                for (int j = i; j < size - 1; j++) {
+                    data[j] = data[j + 1];
+                }
+                data[size - 1] = null;
+                size--;
+                return;
+            }
+        }
+    }
+    
     // Redimensiona el arreglo (por ejemplo, duplicando capacidad)
     private void resize(int newCapacity) {
         @SuppressWarnings("unchecked")
