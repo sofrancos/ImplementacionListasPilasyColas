@@ -1,18 +1,14 @@
 import java.time.Instant;
 import java.time.Duration;
+import java.util.Scanner;
+import java.util.Random;
 
 public class Main {
 
-    // Interfaz funcional para capturar el método push
-    @FunctionalInterface
-    interface Operation {
-        void apply(int data);
-    }
-
-    // Método exec para medir el tiempo
-    public static long exec(int size, Operation operation) {
-        Instant start = Instant.now();
-        for (int i = 0; i < size; i++) {
+    public static void exec(int size, String method, Operation operation) {
+        Instant start = Instant.now();        
+        
+        for (int i =0; i<size; i++)
             operation.apply(i);
         }
         Instant finish = Instant.now();
