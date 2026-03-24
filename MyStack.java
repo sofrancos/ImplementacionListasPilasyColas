@@ -14,24 +14,31 @@ public class MyStack<T> {
 
     // Inserta elemento en el tope
     public void push(T value) {
-        // TODO
+        if (size == capacity) {
+            resize(capacity * 2);
+        }
+        data[size] = value;
+        size++;
     }
 
     // Elimina el elemento del tope
     public void pop() {
-        // TODO
+        if (!empty()) {
+            size--;
+        }
     }
 
     // Retorna el elemento del tope
     public T top() {
-        // TODO
+        if (!empty()) {
+            return data[size - 1];
+        }
         return null;
     }
 
     // Verifica si está vacío
     public boolean empty() {
-        // TODO
-        return false;
+        return size == 0;
     }
 
     // Retorna el tamaño actual
@@ -46,11 +53,21 @@ public class MyStack<T> {
 
     // Redimensiona el arreglo (por ejemplo, duplicando capacidad)
     private void resize(int newCapacity) {
-        // TODO
+        @SuppressWarnings("unchecked")
+        T[] newData = (T[]) new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newData[i] = data[i];
+        }
+        data = newData;
+        capacity = newCapacity;
     }
 
     // Limpia el stack
     public void clear() {
-        // TODO
+        for (int i = 0; i < size; i++) {
+            data[i] = null;
+        }
+        size = 0;
     }
 }
+
