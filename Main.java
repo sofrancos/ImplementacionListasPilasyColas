@@ -3,26 +3,41 @@ import java.time.Duration;
 
 public class Main {
 
-    public static void exec(int size, String method, Operation operation) {
-        Instant start = Instant.now();        
-        
-        for (int i =0; i<size; i++)
-            operation.apply(i);
+    // Interfaz funcional para capturar el método push
+    @FunctionalInterface
+    interface Operation {
+        void apply(int data);
+    }
 
+    // Método exec para medir el tiempo
+    public static long exec(int size, Operation operation) {
+        Instant start = Instant.now();
+        for (int i = 0; i < size; i++) {
+            operation.apply(i);
+        }
         Instant finish = Instant.now();
-        long timeElapsed = Duration.between(start, finish).toMillis();
-        System.out.printf("Se ejecutó %s de %d elementos en: %d milisegundos\n", method, size, timeElapsed);
+        return Duration.between(start, finish).toMillis();
     }
 
     public static void main(String[] args) {
-        final int start = 100;
-        final int end = 10000;
-        
-        for (int size = start; size <= end; size *= 10)
-            for (int i =0; i<5; i++){
-                ListaArrEsta lista = new ListaArrEsta(size);
-                exec(size, "addFirst", lista::addFirst);
-            }
-    
+        // Probaremos con tres escalas de tamaño
+        int[] sizes = {1000, 10000, 100000};
+
+        System.out.println("====================================================");
+        System.out.printf("%-15s | %-12s | %-15s%n", "ESTRUCTURA", "ELEMENTOS", "TIEMPO (ms)");
+        System.out.println("----------------------------------------------------");
+
+        for (int size : sizes) {
+            // Creamos una nueva instancia de la Pila para cada prueba
+            MyStack<Integer> pila = new MyStack<>();
+
+            // Medimos el tiempo del método push
+            long tiempo = exec(size, pila::push);
+
+            // Imprimimos el resultado en la tabla
+            System.out.printf("%-15s | %-12d | %-15d%n", "Pila (Stack)", size, tiempo);
+        }
+
+        System.out.println("====================================================");
     }
 }
