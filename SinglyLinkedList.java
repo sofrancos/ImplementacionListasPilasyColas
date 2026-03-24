@@ -136,6 +136,20 @@ private int size;
         current.next = nuevo;
         size++;
     }
+    public int topFront(){
+        if(isEmpty()) return -1;
+        return head.data;
+    }
+
+    public int topBack(){
+        if(isEmpty()) return -1;
+        Node current = head;
+        while(current.next != null){
+            current = current.next;
+        }
+        return current.data;
+    }
+
 
     public boolean isEmpty() { 
         return head == null; 
