@@ -79,7 +79,7 @@ public class MyQueue<T> {
         }
     }
     // Redimensiona el arreglo
-    private void resize(int newCapacity) {
+    public void resize(int newCapacity) {
         T[] newData = (T[]) new Object[newCapacity];
         for (int i = 0; i < size; i++) {
             newData[i] = data[(front + i) % capacity];
@@ -98,5 +98,8 @@ public class MyQueue<T> {
         front = 0;
         rear = 0;
         size = 0;
+    }
+    public int capacity(){
+        return capacity;
     }
 }

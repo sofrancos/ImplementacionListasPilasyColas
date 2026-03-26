@@ -72,7 +72,7 @@ public class MyStack<T> {
     }
     
     // Redimensiona el arreglo (por ejemplo, duplicando capacidad)
-    private void resize(int newCapacity) {
+    public void resize(int newCapacity) {
         @SuppressWarnings("unchecked")
         T[] newData = (T[]) new Object[newCapacity];
         for (int i = 0; i < size; i++) {
