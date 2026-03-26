@@ -122,18 +122,11 @@ private int size;
     }
 
     public void addAfter(Node node, int data) {
-        if(isEmpty()) return;
+        if(isEmpty()|| node== null) return;
 
         Node nuevo = new Node(data);
-        Node current = head;
-
-        while(current != null && current != node){
-            current = current.next;
-        }
-
-        if(current == null) return;
-        nuevo.next = current.next;
-        current.next = nuevo;
+        nuevo.next = node.next;
+        node.next = nuevo;
         size++;
     }
     public int topFront(){

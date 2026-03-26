@@ -121,17 +121,15 @@ private int size;
     }
 
     public void addAfter(Node node, int data){
-        if(isEmpty()) return;
+        if(isEmpty()|| node ==null) return;
         Node nuevo = new Node(data);
-        Node current = head;
-        while(current != null && current != node){
-            current = current.next;
+        nuevo.next = node.next;
+        node.next =nuevo;
+        if(node == tail){
+            tail = nuevo;
         }
-        if(current == null) return;
-        nuevo.next = current.next;
-        current.next = nuevo;
-        if(current == tail) tail = nuevo;
-        size++;    
+        size++;
+           
     }
     public boolean isEmpty(){
         return head == null; 
