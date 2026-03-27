@@ -104,7 +104,6 @@ public class Main {
                             case 8  -> execConstant(n, () -> list.addAfter(nodo, val));
                             case 9  -> execConstant(n, () -> list.isEmpty());
                             case 10 -> execConstant(n, () -> list.topFront());
-                            case 11 -> execConstant(n, () -> list.topBack());
                             case 12 -> execConstant(n, () -> list.size());
                             // O(n)
                             case 2  -> execLinear(() -> list.pushBack(val));
@@ -112,6 +111,7 @@ public class Main {
                             case 5  -> execLinear(() -> list.find(val));
                             case 6  -> execLinear(() -> list.erase(nodo));
                             case 7  -> execLinear(() -> list.addBefore(nodo, val));
+                            case 11 -> execLinear(() -> list.topBack());
                             default -> throw new IllegalArgumentException("Método inválido");
                         };
                         printResult("List-SinCola", metodoList + "", n, t);
@@ -136,6 +136,7 @@ public class Main {
                             case 5  -> execLinear(() -> list.find(val));
                             case 6  -> execLinear(() -> list.erase(nodo));
                             case 7  -> execLinear(() -> list.addBefore(nodo, val));
+                            
                             default -> throw new IllegalArgumentException("Método inválido");
                         };
                         printResult("List-ConCola", metodoList + "", n, t);
@@ -154,12 +155,12 @@ public class Main {
                             case 8  -> execConstant(n, () -> list.addAfter(nodo, val));
                             case 9  -> execConstant(n, () -> list.isEmpty());
                             case 10 -> execConstant(n, () -> list.topFront());
-                            case 11 -> execConstant(n, () -> list.topBack());
                             case 12 -> execConstant(n, () -> list.size());
                             // O(n)
                             case 2  -> execLinear(() -> list.pushBack(val));
                             case 4  -> execLinear(() -> list.popBack());
                             case 5  -> execLinear(() -> list.find(val));
+                            case 11 -> execLinear(() -> list.topBack());
                             default -> throw new IllegalArgumentException("Método inválido");
                         };
                         printResult("List-DobleSinCola", metodoList + "", n, t);

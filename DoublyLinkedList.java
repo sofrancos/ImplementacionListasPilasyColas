@@ -75,6 +75,8 @@ public class DoublyLinkedList {
         if (node == null || head == null) return;
         if (node == head) {
             popFront();
+            return;
+        }
         if (node.prev != null) {
             node.prev.next = node.next;
         }
@@ -82,7 +84,7 @@ public class DoublyLinkedList {
             node.next.prev = node.prev;
         }
         size--;
-        }
+        
     }
     public void addBefore(Node node, int data) {
         if (node == null) return;
