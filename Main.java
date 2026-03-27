@@ -1,5 +1,3 @@
-import java.time.Instant;
-import java.time.Duration;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -10,41 +8,52 @@ public class Main {
         void apply();
     }
 
-    // Para métodos O(1): ejecuta 'size' veces y retorna el tiempo total
-    // Se usa con métodos cuyo costo no depende del tamaño de la estructura
-    public static long execConstant(Operation operation, int repeticiones) {
-    long total = 0;
-    int exitosas = 0;
-    for (int i = 0; i < repeticiones; i++) {
-        try {
-            Instant start = Instant.now();
-            operation.apply();
-            Instant finish = Instant.now();
-            total += Duration.between(start, finish).toNanos();
-            exitosas++;
-        } catch (Exception e) {
-            break; // la estructura se vació, no tiene sentido seguir
+    // Devuelve double y usa nanoTime para ultra precisión
+    public static double execConstant(int repeticiones, Operation operation) {
+        int exitosas = 0;
+        long start = System.nanoTime();
+        for (int i = 0; i < repeticiones; i++) {
+            try {
+                operation.apply();
+                exitosas++;
+            } catch (Exception e) {
+                break;
+            }
         }
-    }
-    return exitosas > 0 ? total / exitosas : 0;
-}
-    // Para métodos O(n): la estructura ya viene llena con n elementos,
-    // ejecuta UNA SOLA vez y retorna el tiempo de esa única operación
-    public static long execLinear(Operation operation) {
-        Instant start = Instant.now();
-        operation.apply();
-        Instant finish = Instant.now();
-        return Duration.between(start, finish).toNanos();
+        long finish = System.nanoTime();
+
+        long totalTimeNs = finish - start;
+        return exitosas > 0 ? (double) totalTimeNs / exitosas : 0.0;
     }
 
-    public static void printResult(String estructura, String metodo, int n, long tiempoNs) {
-        System.out.println("====================================================");
+    // Devuelve double y usa nanoTime para ultra precisión
+    public static double execLinear(Operation operation) {
+        int repeticiones = 50;
+        int exitosas = 0;
+        long start = System.nanoTime();
+        for (int i = 0; i < repeticiones; i++) {
+            try {
+                operation.apply();
+                exitosas++;
+            } catch (Exception e) {
+                break;
+            }
+        }
+        long finish = System.nanoTime();
+
+        long totalTimeNs = finish - start;
+        return exitosas > 0 ? (double) totalTimeNs / exitosas : 0.0;
+    }
+
+    public static void printResult(String estructura, String metodo, int n, double tiempoNs) {
+        System.out.println("=======================================================");
         System.out.printf("%-15s | %-15s | %-12s | %-15s%n",
                 "ESTRUCTURA", "MÉTODO", "ELEMENTOS", "TIEMPO (ns)");
-        System.out.println("----------------------------------------------------");
-        System.out.printf("%-15s | %-15s | %-12d | %-15d%n",
+        System.out.println("-------------------------------------------------------");
+        // %.2f le dice a Java que imprima el double con 2 decimales
+        System.out.printf("%-15s | %-15s | %-12d | %-15.2f%n",
                 estructura, metodo, n, tiempoNs);
-        System.out.println("====================================================");
+        System.out.println("=======================================================");
     }
 
     public static void main(String[] args) {
@@ -104,14 +113,15 @@ public class Main {
                         for (int i = 0; i < n; i++) list.pushFront(rand.nextInt());
                         Node nodo = list.find(rand.nextInt());
                         int val = rand.nextInt();
-                        long t = switch (metodoList) {
+                        double t = switch (metodoList) {
                             // O(1)
-                            case 1  -> execConstant(1000, () -> list.pushFront(val));
-                            case 3  -> execConstant(1000, () -> list.popFront());
-                            case 8  -> execConstant(1000, () -> list.addAfter(nodo, val));
-                            case 9  -> execConstant(1000, () -> list.isEmpty());
-                            case 10 -> execConstant(1000, () -> list.topFront());
-                            case 12 -> execConstant(1000, () -> list.size());// O(n)
+                            case 1  -> execConstant(100000, () -> list.pushFront(val));
+                            case 3  -> execConstant(100000, () -> list.popFront());
+                            case 8  -> execConstant(100000, () -> list.addAfter(nodo, val));
+                            case 9  -> execConstant(100000, () -> list.isEmpty());
+                            case 10 -> execConstant(100000, () -> list.topFront());
+                            case 12 -> execConstant(100000, () -> list.size());
+                            // O(n)
                             case 2  -> execLinear(() -> list.pushBack(val));
                             case 4  -> execLinear(() -> list.popBack());
                             case 5  -> execLinear(() -> list.find(val));
@@ -127,21 +137,22 @@ public class Main {
                         for (int i = 0; i < n; i++) list.pushFront(rand.nextInt());
                         Node nodo = list.find(rand.nextInt());
                         int val = rand.nextInt();
-                        long t = switch (metodoList) {
+                        double t = switch (metodoList) {
                             // O(1)
-                            case 1  -> execConstant(1000, () -> list.pushFront(val));
-                            case 2  -> execConstant(1000, () -> list.pushBack(val));
-                            case 3  -> execConstant(1000, () -> list.popFront());
-                            case 8  -> execConstant(1000, () -> list.addAfter(nodo, val));
-                            case 9  -> execConstant(1000, () -> list.isEmpty());
-                            case 10 -> execConstant(1000, () -> list.topFront());
-                            case 11 -> execConstant(1000, () -> list.topBack());
-                            case 12 -> execConstant(1000, () -> list.size());// O(n)
+                            case 1  -> execConstant(100000, () -> list.pushFront(val));
+                            case 2  -> execConstant(100000, () -> list.pushBack(val));
+                            case 3  -> execConstant(100000, () -> list.popFront());
+                            case 8  -> execConstant(100000, () -> list.addAfter(nodo, val));
+                            case 9  -> execConstant(100000, () -> list.isEmpty());
+                            case 10 -> execConstant(100000, () -> list.topFront());
+                            case 11 -> execConstant(100000, () -> list.topBack());
+                            case 12 -> execConstant(100000, () -> list.size());
+                            // O(n)
                             case 4  -> execLinear(() -> list.popBack());
                             case 5  -> execLinear(() -> list.find(val));
                             case 6  -> execLinear(() -> list.erase(nodo));
                             case 7  -> execLinear(() -> list.addBefore(nodo, val));
-                            
+
                             default -> throw new IllegalArgumentException("Método inválido");
                         };
                         printResult("List-ConCola", metodoList + "", n, t);
@@ -151,16 +162,17 @@ public class Main {
                         for (int i = 0; i < n; i++) list.pushFront(rand.nextInt());
                         Node nodo = list.find(rand.nextInt());
                         int val = rand.nextInt();
-                        long t = switch (metodoList) {
+                        double t = switch (metodoList) {
                             // O(1)
-                            case 1  -> execConstant(1000, () -> list.pushFront(val));
-                            case 3  -> execConstant(1000, () -> list.popFront());
-                            case 6  -> execConstant(1000, () -> list.erase(nodo));
-                            case 7  -> execConstant(1000, () -> list.addBefore(nodo, val));
-                            case 8  -> execConstant(1000, () -> list.addAfter(nodo, val));
-                            case 9  -> execConstant(1000, () -> list.isEmpty());
-                            case 10 -> execConstant(1000, () -> list.topFront());
-                            case 12 -> execConstant(1000, () -> list.size());// O(n)
+                            case 1  -> execConstant(100000, () -> list.pushFront(val));
+                            case 3  -> execConstant(100000, () -> list.popFront());
+                            case 6  -> execConstant(100000, () -> list.erase(nodo));
+                            case 7  -> execConstant(100000, () -> list.addBefore(nodo, val));
+                            case 8  -> execConstant(100000, () -> list.addAfter(nodo, val));
+                            case 9  -> execConstant(100000, () -> list.isEmpty());
+                            case 10 -> execConstant(100000, () -> list.topFront());
+                            case 12 -> execConstant(100000, () -> list.size());
+                            // O(n)
                             case 2  -> execLinear(() -> list.pushBack(val));
                             case 4  -> execLinear(() -> list.popBack());
                             case 5  -> execLinear(() -> list.find(val));
@@ -174,19 +186,19 @@ public class Main {
                         for (int i = 0; i < n; i++) list.pushFront(rand.nextInt());
                         Node nodo = list.find(rand.nextInt());
                         int val = rand.nextInt();
-                        long t = switch (metodoList) {
+                        double t = switch (metodoList) {
                             // O(1)
-                            case 1  -> execConstant(1000, () -> list.pushFront(val));
-                            case 2  -> execConstant(1000, () -> list.pushBack(val));
-                            case 3  -> execConstant(1000, () -> list.popFront());
-                            case 4  -> execConstant(1000, () -> list.popBack());
-                            case 6  -> execConstant(1000, () -> list.erase(nodo));
-                            case 7  -> execConstant(1000, () -> list.addBefore(nodo, val));
-                            case 8  -> execConstant(1000, () -> list.addAfter(nodo, val));
-                            case 9  -> execConstant(1000, () -> list.isEmpty());
-                            case 10 -> execConstant(1000, () -> list.topFront());
-                            case 11 -> execConstant(1000, () -> list.topBack());
-                            case 12 -> execConstant(1000, () -> list.size());
+                            case 1  -> execConstant(100000, () -> list.pushFront(val));
+                            case 2  -> execConstant(100000, () -> list.pushBack(val));
+                            case 3  -> execConstant(100000, () -> list.popFront());
+                            case 4  -> execConstant(100000, () -> list.popBack());
+                            case 6  -> execConstant(100000, () -> list.erase(nodo));
+                            case 7  -> execConstant(100000, () -> list.addBefore(nodo, val));
+                            case 8  -> execConstant(100000, () -> list.addAfter(nodo, val));
+                            case 9  -> execConstant(100000, () -> list.isEmpty());
+                            case 10 -> execConstant(100000, () -> list.topFront());
+                            case 11 -> execConstant(100000, () -> list.topBack());
+                            case 12 -> execConstant(100000, () -> list.size());
                             // O(n)
                             case 5  -> execLinear(() -> list.find(val));
                             default -> throw new IllegalArgumentException("Método inválido");
@@ -214,16 +226,16 @@ public class Main {
                 for (int i = 0; i < n; i++) stack.push(rand.nextInt());
                 int val = rand.nextInt();
 
-                long t = switch (metodoStack) {
+                double t = switch (metodoStack) {
                     // O(1) amortizado / O(1)
-                    case 1 -> execConstant(1000, () -> stack.push(val));
-                    case 2 -> execConstant(1000, () -> stack.pop());
-                    case 3 -> execConstant(1000, () -> stack.peek());
-                    case 4 -> execConstant(1000, () -> stack.isEmpty());
-                    case 5 -> execConstant(1000, () -> stack.size());
-                    case 6 -> execConstant(1000, () -> stack.capacity());
-                    case 9 -> execConstant(1000, () -> stack.clear());
-                    
+                    case 1 -> execConstant(100000, () -> stack.push(val));
+                    case 2 -> execConstant(100000, () -> stack.pop());
+                    case 3 -> execConstant(100000, () -> stack.peek());
+                    case 4 -> execConstant(100000, () -> stack.isEmpty());
+                    case 5 -> execConstant(100000, () -> stack.size());
+                    case 6 -> execConstant(100000, () -> stack.capacity());
+                    case 9 -> execConstant(100000, () -> stack.clear());
+
                     // O(n)
                     case 7 -> execLinear(() -> stack.delete(val));
                     case 8 -> execLinear(() -> stack.resize(n * 2));
@@ -249,15 +261,15 @@ public class Main {
                 for (int i = 0; i < n; i++) queue.enqueue(rand.nextInt());
                 int val = rand.nextInt();
 
-                long t = switch (metodoQueue) {
+                double t = switch (metodoQueue) {
                     // O(1) amortizado / O(1)
-                    case 1 -> execConstant(1000, () -> queue.enqueue(val));
-                    case 2 -> execConstant(1000, () -> queue.dequeue());
-                    case 3 -> execConstant(1000, () -> queue.front());
-                    case 4 -> execConstant(1000, () -> queue.isEmpty());
-                    case 5 -> execConstant(1000, () -> queue.size());
-                    case 6 -> execConstant(1000, () -> queue.capacity());
-                    case 9 -> execConstant(1000, () -> queue.clear());
+                    case 1 -> execConstant(100000, () -> queue.enqueue(val));
+                    case 2 -> execConstant(100000, () -> queue.dequeue());
+                    case 3 -> execConstant(100000, () -> queue.front());
+                    case 4 -> execConstant(100000, () -> queue.isEmpty());
+                    case 5 -> execConstant(100000, () -> queue.size());
+                    case 6 -> execConstant(100000, () -> queue.capacity());
+                    case 9 -> execConstant(100000, () -> queue.clear());
                     // O(n)
                     case 7 -> execLinear(() -> queue.delete(val));
                     case 8 -> execLinear(() -> queue.resize(n * 2));
