@@ -46,7 +46,7 @@ public class Main {
         return exitosas > 0 ? (double) totalTimeNs / exitosas : 0.0;
     }
 */
-    // Devuelve double y usa nanoTime para ultra precisión
+    // Devuelve double y usa nanoTime para ser mas preciso
     public static double execLinear(Operation operation) {
         int repeticiones = 50;
         int exitosas = 0;
