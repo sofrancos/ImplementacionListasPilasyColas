@@ -5,13 +5,12 @@ public class MyStack<T> {
     private int capacity;
 
     // Constructor
-    @SuppressWarnings("unchecked")
-    public MyStack() {
-        this.capacity = 10; // capacidad inicial
+   @SuppressWarnings("unchecked")
+    public MyStack(int initialCapacity) {
+        this.capacity = initialCapacity;
         this.data = (T[]) new Object[capacity];
         this.size = 0;
     }
-
     // Inserta elemento en el tope
     public void push(T value) {
         if (size == capacity) {

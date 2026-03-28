@@ -3,14 +3,34 @@ import java.util.Random;
 
 public class Main {
 
+
     @FunctionalInterface
     interface Operation {
         void apply();
     }
+    
+    public static void warmup(Operation operation) {
+    for (int i = 0; i < 50_000; i++) {
+        try { operation.apply(); } catch (Exception e) {}
+    }
+}
+
+   public static double execConstant(int repeticiones, Operation operation) {
+        warmup(operation); // <-- calienta el JIT ANTES de medir
+
+        long start = System.nanoTime();
+        for (int i = 0; i < repeticiones; i++) {
+            operation.apply();
+        }
+        long finish = System.nanoTime();
+
+        return (double)(finish - start) / repeticiones;
+    }
+
 
     // Devuelve double y usa nanoTime para ultra precisión
-    public static double execConstant(int repeticiones, Operation operation) {
-        int exitosas = 0;
+    /*public static double execConstant(int repeticiones, Operation operation) {
+       int exitosas = 0;
         long start = System.nanoTime();
         for (int i = 0; i < repeticiones; i++) {
             try {
@@ -25,7 +45,7 @@ public class Main {
         long totalTimeNs = finish - start;
         return exitosas > 0 ? (double) totalTimeNs / exitosas : 0.0;
     }
-
+*/
     // Devuelve double y usa nanoTime para ultra precisión
     public static double execLinear(Operation operation) {
         int repeticiones = 50;
@@ -207,43 +227,51 @@ public class Main {
                     }
                     default -> System.out.println("Implementación inválida");
                 }
-            }
+            } 
+                         case 2 -> { // MyStack
+                    System.out.println("Seleccione el método:");
+                    System.out.println("1. push");
+                    System.out.println("2. pop");
+                    System.out.println("3. peek");
+                    System.out.println("4. isEmpty");
+                    System.out.println("5. size");
+                    System.out.println("6. capacity");
+                    System.out.println("7. delete");
+                    System.out.println("8. resize");
+                    System.out.println("9. clear");
+                    int metodoStack = sc.nextInt();
 
-            case 2 -> { // MyStack
-                System.out.println("Seleccione el método:");
-                System.out.println("1. push");
-                System.out.println("2. pop");
-                System.out.println("3. peek");
-                System.out.println("4. isEmpty");
-                System.out.println("5. size");
-                System.out.println("6. capacity");
-                System.out.println("7. delete");
-                System.out.println("8. resize");
-                System.out.println("9. clear");
-                int metodoStack = sc.nextInt();
-
-                MyStack<Integer> stack = new MyStack<>();
+                // stack compartido para casos 3-9
+                MyStack<Integer> stack = new MyStack<>(n + 200_000);
                 for (int i = 0; i < n; i++) stack.push(rand.nextInt());
                 int val = rand.nextInt();
 
                 double t = switch (metodoStack) {
-                    // O(1) amortizado / O(1)
-                    case 1 -> execConstant(100000, () -> stack.push(val));
-                    case 2 -> execConstant(100000, () -> stack.pop());
-                    case 3 -> execConstant(100000, () -> stack.peek());
-                    case 4 -> execConstant(100000, () -> stack.isEmpty());
-                    case 5 -> execConstant(100000, () -> stack.size());
-                    case 6 -> execConstant(100000, () -> stack.capacity());
-                    case 9 -> execConstant(100000, () -> stack.clear());
-
-                    // O(n)
-                    case 7 -> execLinear(() -> stack.delete(val));
-                    case 8 -> execLinear(() -> stack.resize(n * 2));
+                    case 1 -> {
+                        // stack propio sin resize para push
+                        MyStack<Integer> s = new MyStack<>(n + 200_000);
+                        for (int i = 0; i < n; i++) s.push(rand.nextInt());
+                        yield execConstant(100_000, () -> s.push(val));
+                    }
+                    case 2 -> {
+                        MyStack<Integer> s = new MyStack<>(n + 200_000);
+                        for (int i = 0; i < n; i++) s.push(rand.nextInt());
+                        yield execConstant(100_000, () -> {
+                            if (s.isEmpty()) s.push(val);
+                            s.pop();
+                        });
+                    }
+                    case 3  -> execConstant(100_000, () -> stack.peek());
+                    case 4  -> execConstant(100_000, () -> stack.isEmpty());
+                    case 5  -> execConstant(100_000, () -> stack.size());
+                    case 6  -> execConstant(100_000, () -> stack.capacity());
+                    case 9  -> execConstant(100_000, () -> stack.clear());
+                    case 7  -> execLinear(() -> stack.delete(val));
+                    case 8  -> execLinear(() -> stack.resize(n * 2));
                     default -> throw new IllegalArgumentException("Método inválido");
                 };
                 printResult("MyStack", metodoStack + "", n, t);
             }
-
             case 3 -> { // MyQueue
                 System.out.println("Seleccione el método:");
                 System.out.println("1. enqueue");
@@ -257,26 +285,37 @@ public class Main {
                 System.out.println("9. clear");
                 int metodoQueue = sc.nextInt();
 
-                MyQueue<Integer> queue = new MyQueue<>();
+                // queue compartido para casos 3-9
+                MyQueue<Integer> queue = new MyQueue<>(n + 200_000);
                 for (int i = 0; i < n; i++) queue.enqueue(rand.nextInt());
                 int val = rand.nextInt();
 
                 double t = switch (metodoQueue) {
-                    // O(1) amortizado / O(1)
-                    case 1 -> execConstant(100000, () -> queue.enqueue(val));
-                    case 2 -> execConstant(100000, () -> queue.dequeue());
-                    case 3 -> execConstant(100000, () -> queue.front());
-                    case 4 -> execConstant(100000, () -> queue.isEmpty());
-                    case 5 -> execConstant(100000, () -> queue.size());
-                    case 6 -> execConstant(100000, () -> queue.capacity());
-                    case 9 -> execConstant(100000, () -> queue.clear());
-                    // O(n)
-                    case 7 -> execLinear(() -> queue.delete(val));
-                    case 8 -> execLinear(() -> queue.resize(n * 2));
+                    case 1 -> {
+                        MyQueue<Integer> q = new MyQueue<>(n + 200_000);
+                        for (int i = 0; i < n; i++) q.enqueue(rand.nextInt());
+                        yield execConstant(100_000, () -> q.enqueue(val));
+                    }
+                    case 2 -> {
+                        MyQueue<Integer> q = new MyQueue<>(n + 200_000);
+                        for (int i = 0; i < n; i++) q.enqueue(rand.nextInt());
+                        yield execConstant(100_000, () -> {
+                            if (q.isEmpty()) q.enqueue(val);
+                            q.dequeue();
+                        });
+                    }
+                    case 3  -> execConstant(100_000, () -> queue.front());
+                    case 4  -> execConstant(100_000, () -> queue.isEmpty());
+                    case 5  -> execConstant(100_000, () -> queue.size());
+                    case 6  -> execConstant(100_000, () -> queue.capacity());
+                    case 9  -> execConstant(100_000, () -> queue.clear());
+                    case 7  -> execLinear(() -> queue.delete(val));
+                    case 8  -> execLinear(() -> queue.resize(n * 2));
                     default -> throw new IllegalArgumentException("Método inválido");
                 };
                 printResult("MyQueue", metodoQueue + "", n, t);
             }
+            
             default -> System.out.println("Estructura inválida");
         }
 

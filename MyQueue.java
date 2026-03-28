@@ -8,15 +8,12 @@ public class MyQueue<T> {
 
     // Constructor
     @SuppressWarnings("unchecked")
-    public MyQueue() {
-        this.capacity = 10;
+    public MyQueue(int initialCapacity) {
+        this.capacity = initialCapacity;
         this.data = (T[]) new Object[capacity];
-        this.front = 0;
-        this.rear = 0;
-        this.size = 0;
+        // inicializa los demás campos igual que el constructor por defecto
     }
-
-// Inserta al final
+   // Inserta al final
     public void enqueue(T x) {
         if (size == capacity) {
             resize(capacity * 2);
