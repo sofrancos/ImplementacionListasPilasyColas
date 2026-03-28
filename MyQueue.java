@@ -6,14 +6,14 @@ public class MyQueue<T> {
     private int size;
     private int capacity;
 
-    // Constructor
+    
     @SuppressWarnings("unchecked")
     public MyQueue(int initialCapacity) {
         this.capacity = initialCapacity;
         this.data = (T[]) new Object[capacity];
-        // inicializa los demás campos igual que el constructor por defecto
+        
     }
-   // Inserta al final
+   
     public void enqueue(T x) {
         if (size == capacity) {
             resize(capacity * 2);
@@ -23,7 +23,7 @@ public class MyQueue<T> {
         size++;
     }
     
-    // Elimina y retorna el primero
+    
     public T dequeue() {
         if (isEmpty()) {
             System.out.println("Error: Cola vacía");
@@ -36,7 +36,7 @@ public class MyQueue<T> {
         return value;
     }
 
-    // Retorna el primero sin eliminar
+    
     public T front() {
        if (isEmpty()) {
             System.out.println("Error: Cola vacía");
@@ -45,17 +45,16 @@ public class MyQueue<T> {
         return data[front];
     }
 
-    // Verifica si está vacía
+    
     public boolean isEmpty() {
         return size == 0;
     }
 
-    // Retorna el tamaño
+    
     public int size() {
         return size;
     }
 
-    // Elimina la primera ocurrencia de n
     public void delete(T n) {
         if (isEmpty()) return;
         for (int i = 0; i < size; i++) {
@@ -75,7 +74,6 @@ public class MyQueue<T> {
             }
         }
     }
-    // Redimensiona el arreglo
     public void resize(int newCapacity) {
         T[] newData = (T[]) new Object[newCapacity];
         for (int i = 0; i < size; i++) {
@@ -86,8 +84,6 @@ public class MyQueue<T> {
         rear = size;
         capacity = newCapacity;
     }
-
-    // Limpia la cola
     public void clear() {
        for (int i = 0; i < size; i++) {
             data[(front + i) % capacity] = null;
